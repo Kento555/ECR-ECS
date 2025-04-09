@@ -19,13 +19,17 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::255945442255:role/WS-Github
+        role-to-assume: arn:aws:iam::255954442255:role/WS-Github
         aws-region: us-east-1
 
     - name: Deploy latest image to ECS
       run: |
+        CLUSTER_NAME="${{ secrets.ECS_CLUSTER_NAME }}"
+        SERVICE_NAME="${{ secrets.ECS_SERVICE_NAME }}"
+        REGION="us-east-1"
+
         aws ecs update-service \
-          --cluster ${{ secrets.ECS_CLUSTER_NAME }} \
-          --service ${{ secrets.ECS_SERVICE_NAME }} \
+          --cluster "$CLUSTER_NAME" \
+          --service "$SERVICE_NAME" \
           --force-new-deployment \
-          --region us-east-1
+          --region "$REGION"
